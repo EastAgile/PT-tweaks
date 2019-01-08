@@ -1,0 +1,12 @@
+*.pyc
+*.sqlite3
+
+# Local environment
+.env
+
+# Coverage report
+htmlcov
+.coverage
+
+# Editor
+.vscode
