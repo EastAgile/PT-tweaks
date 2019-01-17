@@ -1,0 +1,46 @@
+import re
+
+from django.test import TestCase
+
+import httpretty
+from robber import expect
+
+from activity.pt_client import PTClient
+
+
+class PTClientTestCase(TestCase):
+    def setUp(self):
+        self.client = PTClient('token')
+
+    @httpretty.activate
+    def test_get_story_activities(self):
+        httpretty.register_uri(
+            httpretty.GET,
+            re.compile(r'.*pivotaltracker.com/.*'),
+            body='{}',
+            status=200,
+            content_type='application/json'
+        )
+
+        self.client.get_story_activities(11, 22)
+
+        last_req = httpretty.last_request()
+        expect(last_req.path).to.contain('/projects/11/stories/22/activity')
+
+    @httpretty.activate
+    def test_update_story(self):
+        httpretty.register_uri(
+            httpretty.PUT,
+            re.compile(r'.*pivotaltracker.com/.*'),
+            body='{}',
+            status=200,
+            content_type='application/json'
+        )
+
+        self.client.update_story(11, 22, name='Test story')
+
+        last_req = httpretty.last_request()
+        req_body = last_req.parsed_body
+
+        expect(last_req.path).to.contain('/projects/11/stories/22')
+        expect(req_body['name']).to.eq('Test story')

@@ -1,0 +1,42 @@
+# This circleCI config follows Circle CI official documentation for Django project
+# https://circleci.com/docs/2.0/language-python/#demo-python-django-reference-project
+version: 2
+jobs:
+  build:
+    working_directory: ~/pttweaks
+    docker:
+      - image: circleci/python:3.6.4
+        environment:
+          PIPENV_VENV_IN_PROJECT: true
+    steps:
+      - checkout
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.6/site-packages
+      - restore_cache: # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: deps1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - run:
+          name: Install dependencies
+          command: |
+            sudo pip install pipenv
+            pipenv install --dev
+      - save_cache: # cache Python dependencies using checksum of Pipfile as the cache-key
+          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          paths:
+            - ".venv"
+            - "/usr/local/bin"
+            - "/usr/local/lib/python3.6/site-packages"
+      - run:
+          name: create .env file to store environment variables
+          command: |
+            touch .env
+      - run: # run linter
+          command: pipenv run "flake8 ."
+      - run: # run tests
+          command: |
+            pipenv run "coverage run manage.py test --settings=config.settings.test"
+            pipenv run "coverage report"
+      - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: test-results
+      - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+          path: test-results
+          destination: tr1
