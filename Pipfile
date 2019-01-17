@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+requests = "~=2.21"
+django-environ = "~=0.4"
+Django = "~=2.1"
+
+[dev-packages]
+"flake8" = "~=3.6"
+robber = "~=1.1"
+httpretty = "~=0.9"
+coverage = "~=4.5"
+
+[requires]
+python_version = "3.6"
