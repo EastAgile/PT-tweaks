@@ -1,7 +1,7 @@
 import logging
 
 from .story_manager import story_manager
-from .utils import utc_from_str, utc_to_str, strip_none
+from .utils import utc_from_str, utc_to_str, strip_none, utc_from_timestamp
 
 
 class Job(object):
@@ -24,7 +24,7 @@ class AdjustStoryAcceptedDateJob(Job):
 
     def run(self, activity):
         accepted_changes = [
-            (change.id, change.new_values.get('accepted_at', None))
+            (change.id, utc_from_timestamp(change.new_values.get('accepted_at', None)))
             for change in activity.changes if change.is_accept_activity()
         ]
         project = story_manager.get_project(activity.project.id)
@@ -38,8 +38,7 @@ class AdjustStoryAcceptedDateJob(Job):
 
             if delivered_date:
                 delivered_iteration = (delivered_date.date() - project.start_time.date()).days // iteration_length
-                accepted_iteration = (utc_from_str(accepted_at).date() - project.start_time.date()).days \
-                    // iteration_length
+                accepted_iteration = (accepted_at.date() - project.start_time.date()).days // iteration_length
 
                 if accepted_iteration != delivered_iteration:
                     # TODO: log the changes
