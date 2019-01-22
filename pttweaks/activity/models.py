@@ -29,8 +29,12 @@ class ActivityChange(DictModel):
     def new_values(self):
         return self._origin['new_values']
 
+    @property
+    def change_type(self):
+        return self._origin['change_type']
+
     def is_accept_activity(self):
-        return self.new_values.get('current_state', None) == 'accepted'
+        return self.change_type == 'update' and self.new_values.get('current_state', None) == 'accepted'
 
 
 class Activity(DictModel):

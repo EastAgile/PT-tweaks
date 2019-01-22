@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from unittest.mock import patch
 
 from django.test import TestCase
@@ -24,9 +25,10 @@ class AdjustStoryAcceptedDateJobTestCase(TestCase):
             'project': {'id': 11},
             'changes': [{
                 'id': 22,
+                'change_type': 'update',
                 'new_values': {
                     'current_state': 'accepted',
-                    'accepted_at': '2017-11-30T08:00:00Z'
+                    'accepted_at': datetime(2017, 11, 30, 8, 0, 0, tzinfo=timezone.utc).timestamp() * 1e3
                 }
             }]
         })
@@ -78,12 +80,19 @@ class AdjustStoryAcceptedDateJobTestCase(TestCase):
     def test_run_do_nothing_if_not_accepting_activity(self, story_manager_mock):
         not_accepting_activity = Activity({
             'project': {'id': 11},
-            'changes': [{
-                'id': 22,
-                'new_values': {
-                    'current_state': 'finished'
+            'changes': [
+                {
+                    'id': 22,
+                    'change_type': 'update',
+                    'new_values': {
+                        'current_state': 'finished'
+                    }
+                },
+                {
+                    'id': 23,
+                    'change_type': 'delete'
                 }
-            }]
+            ]
         })
         self.job.run(not_accepting_activity)
 
@@ -95,6 +104,7 @@ class AdjustStoryAcceptedDateJobTestCase(TestCase):
             'project': {'id': 11},
             'changes': [{
                 'id': 22,
+                'change_type': 'update',
                 'new_values': {
                     'current_state': 'accepted'
                 }
@@ -129,9 +139,10 @@ class AdjustStoryAcceptedDateJobTestCase(TestCase):
             'project': {'id': 11},
             'changes': [{
                 'id': 22,
+                'change_type': 'update',
                 'new_values': {
                     'current_state': 'accepted',
-                    'accepted_at': '2017-11-25T08:00:00Z'
+                    'accepted_at': datetime(2017, 11, 25, 8, 0, 0, tzinfo=timezone.utc).timestamp() * 1e3
                 }
             }]
         })
