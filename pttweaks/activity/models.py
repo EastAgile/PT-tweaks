@@ -5,6 +5,9 @@ class DictModel(object):
     def __init__(self, data):
         self._origin = data
 
+    def get_json(self):
+        return self._origin
+
 
 class Project(DictModel):
     @property
@@ -18,6 +21,12 @@ class Project(DictModel):
     @property
     def start_time(self):
         return utc_from_str(self._origin['start_time'])
+
+
+class Story(DictModel):
+    @property
+    def id(self):
+        return self._origin['id']
 
 
 class ActivityChange(DictModel):

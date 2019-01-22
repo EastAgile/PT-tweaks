@@ -1,7 +1,7 @@
 from django.conf import settings
 
 from .pt_client import PTClient
-from .models import Activity, Project
+from .models import Activity, Project, Story
 
 
 class StoryManager(object):
@@ -18,6 +18,10 @@ class StoryManager(object):
     def get_project(self, project_id):
         project = self.client.get_project(project_id)
         return Project(project)
+
+    def create_story(self, project_id, story):
+        story = self.client.create_story(project_id, story.get_json())
+        return Story(story)
 
 
 story_manager = StoryManager()
