@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  db:
+    container_name: db
+    image: postgres
+    environment:
+      POSTGRES_DB: pttweaks
+      POSTGRES_USER: pttweaks
+      POSTGRES_PASSWORD: password
+  backend:
+    container_name: backend
+    image: backend
+    build: .
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+      - "587:587"
+    depends_on:
+      - db
+
+volumes:
+  data:
+    driver: local
