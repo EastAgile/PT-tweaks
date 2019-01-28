@@ -19,11 +19,8 @@ class Command(BaseCommand):
         project_id = options['project_id'][0]
         file = options['input'][0]
         stories = json.load(file)
-        print(project_id)
-        print(stories)
 
         for story in stories:
-            print('Importing story {name}'.format(name=story['name']))
+            self.stdout.write('Importing story {name}'.format(name=story['name']))
             story = story_manager.create_story(project_id, Story(story))
-            print('Done {id}'.format(id=story.id))
-        # self.stdout.write(self.style.SUCCESS('Stories activities of project "%s"' % project_id))
+            self.stdout.write('Done {id}'.format(id=story.id))

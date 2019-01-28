@@ -6,6 +6,7 @@ from django.test import TestCase
 from robber import expect
 
 from activity.story_manager import story_manager
+from activity.models import Story
 
 
 class StoryManagerTestCase(TestCase):
@@ -54,3 +55,8 @@ class StoryManagerTestCase(TestCase):
         expect(project.id).to.eq(123)
         expect(project.iteration_length).to.eq(1)
         expect(project.start_time).to.eq(datetime(2017, 11, 21, 11, 0, 0))
+
+    @patch('activity.story_manager.PTClient.create_story')
+    def test_create_story(self, create_story_mock):
+        story_manager.create_story(11, Story({'name': 'Do it'}))
+        expect(create_story_mock).to.called_with(11, {'name': 'Do it'})
