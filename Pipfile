@@ -7,12 +7,18 @@ name = "pypi"
 requests = "~=2.21"
 django-environ = "~=0.4"
 Django = "~=2.1"
+django-model-utils = "~=3.1"
+"psycopg2" = "*"
 
 [dev-packages]
 "flake8" = "~=3.6"
 robber = "~=1.1"
 httpretty = "~=0.9"
 coverage = "~=4.5"
+factory-boy = "~=2.11"
 
 [requires]
 python_version = "3.6"
+
+[scripts]
+runserver = "python manage.py runserver 0.0.0.0:8000"
