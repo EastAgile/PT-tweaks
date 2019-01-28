@@ -41,7 +41,7 @@ class ActivityChangeLogAdminTestCase(TestCase):
         )
 
         expect(self.admin.changes_display(log)).to.eq(
-            'Change on "accepted_at": From "2015-09-01T11:00:11Z" to "2016-11-12T12:00:12Z"\n' + \
+            'Change on "accepted_at": From "2015-09-01T11:00:11Z" to "2016-11-12T12:00:12Z"\n'
             'Change on "estimate": From "1" to "2"'
         )
 

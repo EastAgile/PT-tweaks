@@ -1,4 +1,5 @@
 from .base import *  # noqa: F401, F403
+from .base import env
 
 
 # Database
@@ -17,8 +18,6 @@ DATABASES = {
 # Auth
 # ------------------------------------------------------------------------------
 AUTH_PASSWORD_VALIDATORS = []
-
-
 
 LOGGING = {
     'version': 1,
