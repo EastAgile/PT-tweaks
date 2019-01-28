@@ -59,3 +59,20 @@ class PTClientTestCase(TestCase):
 
         last_req = httpretty.last_request()
         expect(last_req.path).to.contain('/projects/11')
+
+    @httpretty.activate
+    def test_create_story(self):
+        httpretty.register_uri(
+            httpretty.POST,
+            re.compile(r'.*pivotaltracker.com/.*'),
+            body='{}',
+            status=200,
+            content_type='application/json'
+        )
+
+        self.client.create_story(11, {'name': 'story 1'})
+
+        last_req = httpretty.last_request()
+        req_body = last_req.parsed_body
+        expect(last_req.path).to.contain('/projects/11/stories')
+        expect(req_body['name']).to.eq('story 1')
