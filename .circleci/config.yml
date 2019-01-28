@@ -8,6 +8,10 @@ jobs:
       - image: circleci/python:3.6.4
         environment:
           PIPENV_VENV_IN_PROJECT: true
+      - image: postgres
+        environment:
+          POSTGRES_USER: circleci
+          POSTGRES_DB: circle_test
     steps:
       - checkout
       - run: sudo chown -R circleci:circleci /usr/local/bin
@@ -33,7 +37,7 @@ jobs:
           command: pipenv run "flake8 ."
       - run: # run tests
           command: |
-            pipenv run "coverage run manage.py test --settings=config.settings.test"
+            pipenv run "coverage run manage.py test"
             pipenv run "coverage report"
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: test-results
