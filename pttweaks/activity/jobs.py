@@ -1,6 +1,7 @@
 import logging
 
 from .story_manager import story_manager
+from .models import ActivityChangeLog, ADJUST_STORY_ACCEPTED_DATE
 from .utils import utc_from_str, utc_to_str, strip_none, utc_from_timestamp
 
 
@@ -47,4 +48,15 @@ class AdjustStoryAcceptedDateJob(Job):
                         from_date=accepted_at,
                         to_date=delivered_date
                     ))
+                    ActivityChangeLog.objects.create(
+                        story_id=story_id,
+                        project_id=project.id,
+                        origin=ADJUST_STORY_ACCEPTED_DATE,
+                        changes={
+                            'accepted_at': {
+                                'new': utc_to_str(delivered_date),
+                                'old': utc_to_str(accepted_at),
+                            }
+                        }
+                    )
                     story_manager.update_story(project.id, story_id, accepted_at=utc_to_str(delivered_date))

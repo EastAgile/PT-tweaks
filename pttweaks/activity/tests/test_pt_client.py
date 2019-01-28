@@ -1,6 +1,6 @@
 import re
 
-from django.test import TestCase
+from django.test import SimpleTestCase
 
 import httpretty
 from robber import expect
@@ -8,7 +8,7 @@ from robber import expect
 from activity.pt_client import PTClient
 
 
-class PTClientTestCase(TestCase):
+class PTClientTestCase(SimpleTestCase):
     def setUp(self):
         self.client = PTClient('token')
 
