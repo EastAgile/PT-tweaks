@@ -42,3 +42,11 @@ class PTClient(object):
         )
 
         return self._make_request(url, 'get')
+
+    def get_project_stories(self, project_id, **kwargs):
+        url = '{base_url}projects/{project_id}/stories'.format(
+            base_url=self.base_url,
+            project_id=project_id,
+        )
+
+        return self._make_request(url, 'get', params=kwargs)
