@@ -12,12 +12,26 @@ class Project(DictModel):
         return self._origin['id']
 
     @property
+    def name(self):
+        return self._origin['name']
+
+    @property
     def iteration_length(self):
         return self._origin['iteration_length']
 
     @property
     def start_time(self):
         return utc_from_str(self._origin['start_time'])
+
+
+class Story(DictModel):
+    @property
+    def id(self):
+        return self._origin['id']
+
+    @property
+    def accepted_at(self):
+        return self._origin['accepted_at']
 
 
 class ActivityChange(DictModel):
