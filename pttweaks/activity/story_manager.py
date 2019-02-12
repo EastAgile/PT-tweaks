@@ -23,5 +23,9 @@ class StoryManager(object):
         story = self.client.create_story(project_id, story.get_json())
         return Story(story)
 
+    def get_project_stories(self, project_id, params={}):
+        stories = self.client.get_project_stories(project_id, **params)
+        return [Story(story) for story in stories]
+
 
 story_manager = StoryManager()

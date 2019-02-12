@@ -60,3 +60,18 @@ class StoryManagerTestCase(SimpleTestCase):
     def test_create_story(self, create_story_mock):
         story_manager.create_story(11, Story({'name': 'Do it'}))
         expect(create_story_mock).to.called_with(11, {'name': 'Do it'})
+
+    @patch('activity.story_manager.PTClient.get_project_stories')
+    def test_get_project_stories_stories(self, get_project_stories_mock):
+        get_project_stories_mock.return_value = [
+            {
+                'id': 321,
+                'accepted_at': '2018-12-01T05:00:00Z',
+            },
+        ]
+
+        stories = story_manager.get_project_stories(123)
+        expect(get_project_stories_mock).to.be.called_with(123)
+        expect(stories).to.have.length(1)
+        expect(stories[0].id).to.eq(321)
+        expect(stories[0].accepted_at).eq('2018-12-01T05:00:00Z')

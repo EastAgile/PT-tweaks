@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker exec -it backend bash $@
+docker exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti backend bash $@
