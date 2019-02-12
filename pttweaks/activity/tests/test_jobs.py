@@ -1,15 +1,16 @@
 from datetime import datetime, timezone
 from unittest.mock import patch
 
-from django.test import TestCase
+from django.test import SimpleTestCase, TestCase
 
 from robber import expect
 
 from activity.jobs import AdjustStoryAcceptedDateJob, Job
-from activity.models import Activity, Project
+from activity.pt_models import Activity, Project
+from activity.models import ActivityChangeLog
 
 
-class JobTestCase(TestCase):
+class JobTestCase(SimpleTestCase):
     def test_run(self):
         job = Job()
         expect(lambda: job.run(None)).to.throw(NotImplementedError)
@@ -75,6 +76,17 @@ class AdjustStoryAcceptedDateJobTestCase(TestCase):
         expect(story_manager_mock.get_project).to.be.called_with(11)
         expect(story_manager_mock.get_story_activities).to.be.called_with(11, 22)
         expect(story_manager_mock.update_story).to.be.called_with(11, 22, accepted_at='2017-11-23T11:00:00Z')
+        activity_logs = ActivityChangeLog.objects.all()
+        expect(activity_logs).to.have.length(1)
+        expect(activity_logs[0].project_id).to.eq('11')
+        expect(activity_logs[0].story_id).to.eq('22')
+        expect(activity_logs[0].origin).to.eq('ADJUST_STORY_ACCEPTED_DATE')
+        expect(activity_logs[0].changes).to.eq({
+            'accepted_at': {
+                'new': '2017-11-23T11:00:00Z',
+                'old': '2017-11-30T08:00:00Z'
+            }
+        })
 
     @patch('activity.jobs.story_manager')
     def test_run_do_nothing_if_not_accepting_activity(self, story_manager_mock):
