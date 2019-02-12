@@ -1,7 +1,7 @@
 from datetime import datetime
 from unittest.mock import patch
 
-from django.test import TestCase
+from django.test import SimpleTestCase
 
 from robber import expect
 
@@ -9,7 +9,7 @@ from activity.story_manager import story_manager
 from activity.models import Story
 
 
-class StoryManagerTestCase(TestCase):
+class StoryManagerTestCase(SimpleTestCase):
     @patch('activity.story_manager.PTClient.get_story_activities')
     def test_get_story_activities(self, get_story_activities_mock):
         story_activity_dict_result = [

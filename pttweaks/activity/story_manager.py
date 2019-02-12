@@ -1,7 +1,7 @@
 from django.conf import settings
 
 from .pt_client import PTClient
-from .models import Activity, Project, Story
+from .pt_models import Activity, Project, Story
 
 
 class StoryManager(object):

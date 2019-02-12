@@ -1,13 +1,13 @@
 from datetime import datetime
 
-from django.test import TestCase
+from django.test import SimpleTestCase
 
 from robber import expect
 
 from activity.utils import utc_from_str, utc_to_str
 
 
-class UtilsTestCase(TestCase):
+class UtilsTestCase(SimpleTestCase):
     def test_utc_to_str(self):
         expect(utc_to_str(datetime(2018, 11, 28, 12, 11, 5))).to.eq('2018-11-28T12:11:05Z')
 
