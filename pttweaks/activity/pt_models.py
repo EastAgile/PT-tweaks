@@ -5,6 +5,9 @@ class DictModel(object):
     def __init__(self, data):
         self._origin = data
 
+    def get_json(self):
+        return self._origin
+
 
 class Project(DictModel):
     @property

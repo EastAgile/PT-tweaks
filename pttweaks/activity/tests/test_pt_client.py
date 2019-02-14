@@ -77,6 +77,7 @@ class PTClientTestCase(SimpleTestCase):
         expect(last_req.path).to.contain('/projects/11/stories')
         expect(req_body['name']).to.eq('story 1')
 
+    @httpretty.activate
     def test_get_project_stories(self):
         httpretty.register_uri(
             httpretty.GET,

@@ -9,7 +9,7 @@ from robber import expect
 from activity.pt_models import Project, Story
 
 
-class ImportStoriesCommandTestCase(TestCase):
+class AdjustOldStoriesCommandTestCase(TestCase):
     @patch('activity.story_manager.story_manager')
     @patch('activity.jobs.AdjustStoryAcceptedDateJob.process_story')
     def test_command(self, process_story_mock, story_manager_mock):

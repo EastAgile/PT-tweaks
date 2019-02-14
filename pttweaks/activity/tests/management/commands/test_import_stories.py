@@ -7,7 +7,7 @@ from django.test import SimpleTestCase
 
 from robber import expect
 
-from activity.models import Story
+from activity.pt_models import Story
 
 
 class ImportStoriesCommandTestCase(SimpleTestCase):
