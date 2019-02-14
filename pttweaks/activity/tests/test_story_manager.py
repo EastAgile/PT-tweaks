@@ -6,7 +6,7 @@ from django.test import SimpleTestCase
 from robber import expect
 
 from activity.story_manager import story_manager
-from activity.models import Story
+from activity.pt_models import Story
 
 
 class StoryManagerTestCase(SimpleTestCase):

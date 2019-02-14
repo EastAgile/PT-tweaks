@@ -5,7 +5,7 @@ import argparse
 from django.core.management.base import BaseCommand
 
 from activity.story_manager import story_manager
-from activity.models import Story
+from activity.pt_models import Story
 
 
 class Command(BaseCommand):
