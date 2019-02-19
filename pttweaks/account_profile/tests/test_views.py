@@ -3,7 +3,7 @@ from django.test import TestCase
 
 from robber import expect
 
-from account_profile.factories import CustomUserFactory, UserConfigurationFactory
+from account_profile.factories import UserConfigurationFactory
 from account_profile.models import CustomUser, UserConfiguration
 
 
