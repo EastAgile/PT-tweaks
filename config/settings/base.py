@@ -45,14 +45,16 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
+    'django_extensions',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'bootstrapform'
+    'bootstrapform',
 ]
 
 LOCAL_APPS = [
-    'activity'
+    'activity',
+    'account_profile',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -116,6 +118,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTH_USER_MODEL = 'account_profile.CustomUser'
 
 
 # Internationalization
