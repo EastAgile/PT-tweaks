@@ -22,6 +22,7 @@ from activity.urls import urlpatterns as activity_urls
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
+    path('profile/', include('account_profile.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     url('activity/', include((activity_urls, 'activity')))
