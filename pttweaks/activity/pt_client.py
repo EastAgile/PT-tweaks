@@ -21,7 +21,7 @@ class PTClient(object):
         url = '{base_url}projects/{project_id}/stories/{story_id}/activity'.format(
             base_url=self.base_url,
             project_id=project_id,
-            story_id=story_id
+            story_id=story_id,
         )
 
         return self._make_request(url, 'get')
@@ -34,3 +34,27 @@ class PTClient(object):
         )
 
         return self._make_request(url, 'put', json=kwargs)
+
+    def get_project(self, project_id):
+        url = '{base_url}projects/{project_id}'.format(
+            base_url=self.base_url,
+            project_id=project_id,
+        )
+
+        return self._make_request(url, 'get')
+
+    def create_story(self, project_id, story):
+        url = '{base_url}projects/{project_id}/stories'.format(
+            base_url=self.base_url,
+            project_id=project_id,
+        )
+
+        return self._make_request(url, 'post', json=story)
+
+    def get_project_stories(self, project_id, **kwargs):
+        url = '{base_url}projects/{project_id}/stories'.format(
+            base_url=self.base_url,
+            project_id=project_id,
+        )
+
+        return self._make_request(url, 'get', params=kwargs)
