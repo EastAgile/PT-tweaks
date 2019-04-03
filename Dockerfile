@@ -1,6 +1,7 @@
 FROM python:3.6
 
 ENV PYTHONUNBUFFERED 1
+ENV PATH /usr/local/bin:$PATH
 
 RUN apt-get update && apt-get upgrade -y && apt-get autoremove && apt-get autoclean
 RUN apt-get update && apt-get install -y \
