@@ -13,5 +13,9 @@ def utc_from_str(datetime_str):
         return datetime.strptime(datetime_str, UTC_DATETIME_FORMAT)
 
 
+def utc_from_timestamp(timestamp):
+    return datetime.utcfromtimestamp(timestamp/1e3) if timestamp else None
+
+
 def strip_none(li):
     return [el for el in li if el is not None]

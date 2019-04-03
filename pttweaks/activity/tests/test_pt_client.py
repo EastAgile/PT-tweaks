@@ -1,6 +1,6 @@
 import re
 
-from django.test import TestCase
+from django.test import SimpleTestCase
 
 import httpretty
 from robber import expect
@@ -8,7 +8,7 @@ from robber import expect
 from activity.pt_client import PTClient
 
 
-class PTClientTestCase(TestCase):
+class PTClientTestCase(SimpleTestCase):
     def setUp(self):
         self.client = PTClient('token')
 
@@ -44,3 +44,50 @@ class PTClientTestCase(TestCase):
 
         expect(last_req.path).to.contain('/projects/11/stories/22')
         expect(req_body['name']).to.eq('Test story')
+
+    @httpretty.activate
+    def test_get_project(self):
+        httpretty.register_uri(
+            httpretty.GET,
+            re.compile(r'.*pivotaltracker.com/.*'),
+            body='{}',
+            status=200,
+            content_type='application/json'
+        )
+
+        self.client.get_project(11)
+
+        last_req = httpretty.last_request()
+        expect(last_req.path).to.contain('/projects/11')
+
+    @httpretty.activate
+    def test_create_story(self):
+        httpretty.register_uri(
+            httpretty.POST,
+            re.compile(r'.*pivotaltracker.com/.*'),
+            body='{}',
+            status=200,
+            content_type='application/json'
+        )
+
+        self.client.create_story(11, {'name': 'story 1'})
+
+        last_req = httpretty.last_request()
+        req_body = last_req.parsed_body
+        expect(last_req.path).to.contain('/projects/11/stories')
+        expect(req_body['name']).to.eq('story 1')
+
+    @httpretty.activate
+    def test_get_project_stories(self):
+        httpretty.register_uri(
+            httpretty.GET,
+            re.compile(r'.*pivotaltracker.com/.*'),
+            body='{}',
+            status=200,
+            content_type='application/json',
+        )
+
+        self.client.get_project_stories(11, limit=10)
+
+        last_req = httpretty.last_request()
+        expect(last_req.path).to.contain('/projects/11/stories?limit=10')

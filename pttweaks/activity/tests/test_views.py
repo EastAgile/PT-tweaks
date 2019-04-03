@@ -2,13 +2,13 @@ import json
 from unittest.mock import patch, Mock
 
 from django.urls import reverse
-from django.test import TestCase, override_settings
+from django.test import SimpleTestCase, override_settings
 
 from robber import expect
 
 
 @override_settings(WEBHOOK_VERIFY_TOKEN='verified_token')
-class ActivityWebhookTestCase(TestCase):
+class ActivityWebhookTestCase(SimpleTestCase):
     def test_post(self):
         request_dict = {
             'projects': 'abc',

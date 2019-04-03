@@ -1,5 +1,8 @@
+import logging
+
 from .story_manager import story_manager
-from .utils import utc_from_str, utc_to_str, strip_none
+from .models import ActivityChangeLog, ADJUST_STORY_ACCEPTED_DATE
+from .utils import utc_from_str, utc_to_str, strip_none, utc_from_timestamp
 
 
 class Job(object):
@@ -20,15 +23,45 @@ class AdjustStoryAcceptedDateJob(Job):
 
         return max(strip_none(updated_dates), default=None)
 
+    def process_story(self, project, story_id, accepted_at=None):
+        story_activities = story_manager.get_story_activities(project.id, story_id)
+
+        delivered_date = self._get_latest_updated_date(story_activities)
+
+        iteration_length = project.iteration_length * 7  # week to days
+
+        if delivered_date:
+            delivered_iteration = (delivered_date.date() - project.start_time.date()).days // iteration_length
+            accepted_iteration = (accepted_at.date() - project.start_time.date()).days // iteration_length
+
+            if accepted_iteration != delivered_iteration:
+                logging.info('Update accepted date of story {story_id} from {from_date} to {to_date}'.format(
+                    story_id=story_id,
+                    from_date=accepted_at,
+                    to_date=delivered_date
+                ))
+                ActivityChangeLog.objects.update_or_create(
+                    story_id=story_id,
+                    project_id=project.id,
+                    origin=ADJUST_STORY_ACCEPTED_DATE,
+                    defaults={
+                        'is_reverted': False,
+                        'changes': {
+                            'accepted_at': {
+                                'new': utc_to_str(delivered_date),
+                                'old': utc_to_str(accepted_at),
+                            }
+                        }
+                    }
+                )
+                story_manager.update_story(project.id, story_id, accepted_at=utc_to_str(delivered_date))
+
     def run(self, activity):
-        story_ids = [
-            change.id for change in activity.changes if change.is_accept_activity()
+        accepted_changes = [
+            (change.id, utc_from_timestamp(change.new_values.get('accepted_at', None)))
+            for change in activity.changes if change.is_accept_activity()
         ]
-        project_id = activity.project.id
+        project = story_manager.get_project(activity.project.id)
 
-        for story_id in story_ids:
-            story_activities = story_manager.get_story_activities(project_id, story_id)
-
-            updated_date = self._get_latest_updated_date(story_activities)
-            if updated_date:
-                story_manager.update_story(project_id, story_id, accepted_at=utc_to_str(updated_date))
+        for story_id, accepted_at in accepted_changes:
+            self.process_story(project, story_id, accepted_at)
