@@ -1,3 +1,5 @@
+# The code below is from the AiDD conversation: https://eastagile.skydeck.ai/conversation/Hs1xVQWu888
+
 import requests
 import json
 from datetime import datetime, timedelta
