@@ -62,7 +62,7 @@ def update_story_accepted_at(story):
 
     started_at = fetch_story_start_date(story['id'])
     if started_at:
-        accepted_at = started_at + timedelta(days=3)  # Adding 3 days to keep it within the same week
+        accepted_at = started_at + timedelta(days=1)  # Adding 1 day to keep it within the same week
 
         # Check if the current accepted_at is already within the same week as started_at
         current_accepted_at = datetime.fromisoformat(story['accepted_at'].replace('Z', '+00:00'))
@@ -87,7 +87,7 @@ def main():
     for story in stories:
         updated_story = update_story_accepted_at(story)
         if updated_story:
-            print(f"Updated story {story['id']} accepted_at to {updated_story['accepted_at']}")
+            print(f"Updated story {story['id']} accepted_at {story['accepted_at']} to {updated_story['accepted_at']}")
 
 if __name__ == "__main__":
     main()
