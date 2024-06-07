@@ -39,8 +39,8 @@ def fetch_all_accepted_stories():
     offset = 0
 
     while True:
-        url = f"https://www.pivotaltracker.com/services/v5/projects/{
-            PROJECT_ID}/stories?with_state=accepted&limit={STORIES_PER_PAGE}&offset={offset}"
+        params = f"with_state=accepted&limit={STORIES_PER_PAGE}&offset={offset}"
+        url = f"https://www.pivotaltracker.com/services/v5/projects/{PROJECT_ID}/stories?{params}"
         page_stories = get_request(url)
         stories.extend(page_stories)
         if len(page_stories) < STORIES_PER_PAGE:
