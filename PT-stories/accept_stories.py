@@ -16,24 +16,31 @@ HEADERS = {
 }
 
 # Helper function to perform GET requests
+
+
 def get_request(url):
     response = requests.get(url, headers=HEADERS)
     response.raise_for_status()
     return response.json()
 
 # Helper function to perform PUT requests
+
+
 def put_request(url, body):
     response = requests.put(url, headers=HEADERS, data=json.dumps(body))
     response.raise_for_status()
     return response.json()
 
 # Fetch all accepted stories with pagination
+
+
 def fetch_all_accepted_stories():
     stories = []
     offset = 0
 
     while True:
-        url = f"https://www.pivotaltracker.com/services/v5/projects/{PROJECT_ID}/stories?with_state=accepted&limit={STORIES_PER_PAGE}&offset={offset}"
+        url = f"https://www.pivotaltracker.com/services/v5/projects/{
+            PROJECT_ID}/stories?with_state=accepted&limit={STORIES_PER_PAGE}&offset={offset}"
         page_stories = get_request(url)
         stories.extend(page_stories)
         if len(page_stories) < STORIES_PER_PAGE:
@@ -43,6 +50,8 @@ def fetch_all_accepted_stories():
     return stories
 
 # Fetch story transitions to find when the story was started
+
+
 def fetch_story_start_date(story_id):
     url = f"https://www.pivotaltracker.com/services/v5/projects/{PROJECT_ID}/stories/{story_id}/transitions"
     transitions = get_request(url)
@@ -52,6 +61,8 @@ def fetch_story_start_date(story_id):
     return None
 
 # Update story's accepted_at value to be within the same week as started_at
+
+
 def update_story_accepted_at(story):
     created_at = datetime.fromisoformat(story['created_at'].replace('Z', '+00:00'))
     six_months_ago = datetime.now(timezone.utc) - timedelta(days=180)
@@ -82,12 +93,15 @@ def update_story_accepted_at(story):
         return None
 
 # Main script
+
+
 def main():
     stories = fetch_all_accepted_stories()
     for story in stories:
         updated_story = update_story_accepted_at(story)
         if updated_story:
             print(f"Updated story {story['id']} accepted_at {story['accepted_at']} to {updated_story['accepted_at']}")
+
 
 if __name__ == "__main__":
     main()
